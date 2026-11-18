@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hồ Cá - Lương Đình Thành Đạt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="ho-ca.css" />
+</head>
+<body class="theme-day">
+  <header class="top-bar">
+    <a href="index.html" class="back-btn">← Quay về Trang chủ</a>
+
+    <h1 class="tank-title">Hồ Cá</h1>
+
+    <div class="controls">
+      <button type="button" class="ctrl-btn" id="btnTheme">Đổi màu nước</button>
+      <button type="button" class="ctrl-btn" id="btnFeed">Thả thức ăn</button>
+      <button type="button" class="ctrl-btn" id="btnBubble">Thả bong bóng</button>
+      <button type="button" class="ctrl-btn" id="btnPause">Tạm dừng</button>
+    </div>
+  </header>
+
+  <main class="aquarium" id="aquarium">
+    <div class="water-surface"></div>
+    <div class="light-rays">
+      <div class="ray ray-1"></div>
+      <div class="ray ray-2"></div>
+      <div class="ray ray-3"></div>
+    </div>
+
+    <!-- LỚP HẬU CẢNH: ĐÀN CÁ XANH BƠI PHÍA XA -->
+    <div class="creature faint-school fs-1" title="Đàn cá biển sâu">
+      <img src="faintSchool.png" alt="Đàn cá xanh 1" />
+            <img src="faintSchool.png" alt="Đàn cá xanh 1" />
+
+    </div>
+    <div class="creature faint-school fs-2" title="Đàn cá biển sâu">
+      <img src="faintSchool.png" alt="Đàn cá xanh 2" />
+            <img src="faintSchool.png" alt="Đàn cá xanh 2" />
+      <img src="faintSchool.png" alt="Đàn cá xanh 2" />
+
+    </div>
+
+    <!-- LỚP TRUNG CẢNH: CÁ MẬP, RÙA BIỂN & ĐÀN CÁ VÀNG -->
+    <div class="creature shark" title="Cá mập tuần tra (Click để tăng tốc)">
+      <img src="shark.png" alt="Cá mập" />
+
+
+    </div>
+
+    <div class="creature turtle" title="Rùa biển">
+      <img src="turtle.png" alt="Rùa biển" />
+            <img src="turtle.png" alt="Rùa biển" />
+
+    </div>
+
+    <div class="creature goldfish-school gf-1" title="Đàn cá vàng">
+      <img src="goldFishSchool.png" alt="Đàn cá vàng 1" />
+            <img src="goldFishSchool.png" alt="Đàn cá vàng 1" />
+
+    </div>
+    <div class="creature goldfish-school gf-2" title="Đàn cá vàng nhỏ">
+      <img src="goldFishSchool.png" alt="Đàn cá vàng 2" />
+    </div>
+
+    <div class="creature diver diver-1" title="Thợ lặn áo xanh đen">
+      <img src="diver1.png" alt="Thợ lặn 1" />
+    </div>
+
+    <div class="creature diver diver-2" title="Thợ lặn áo đỏ">
+      <img src="diver2.png" alt="Thợ lặn 2" />
+    </div>
+
+    <div class="creature diver diver-3" title="Thợ lặn áo xanh lá">
+      <img src="diver3.png" alt="Thợ lặn 3" />
+
+    </div>
+
+    <div class="bubbles-layer">
+      <span class="bubble b1"></span>
+      <span class="bubble b2"></span>
+      <span class="bubble b3"></span>
+      <span class="bubble b4"></span>
+      <span class="bubble b5"></span>
+      <span class="bubble b6"></span>
+      <span class="bubble b7"></span>
+      <span class="bubble b8"></span>
+    </div>
+
+    <div class="seabed">
+      <div class="seaweed sw-1"></div>
+      <div class="seaweed sw-2"></div>
+      <div class="seaweed sw-3"></div>
+      <div class="seaweed sw-4"></div>
+      <div class="seaweed sw-5"></div>
+      <div class="seaweed sw-6"></div>
+      <div class="rock rock-1"></div>
+      <div class="rock rock-2"></div>
+      <div class="sand-floor"></div>
+    </div>
+  </main>
+
+  <script>
+    const body = document.body;
+    const aquarium = document.getElementById('aquarium');
+    const themes = ['theme-day', 'theme-deep', 'theme-sunset'];
+    let currentTheme = 0;
+    let isPaused = false;
+
+    document.getElementById('btnTheme').addEventListener('click', () => {
+      body.classList.remove(themes[currentTheme]);
+      currentTheme = (currentTheme + 1) % themes.length;
+      body.classList.add(themes[currentTheme]);
+    });
+
+    function spawnBubble(xPercent, yBottomPx = 40, customSize = null) {
+      if (isPaused) return;
+      const bubble = document.createElement('span');
+      bubble.className = 'bubble dynamic-bubble';
+      const size = customSize || Math.floor(Math.random() * 16) + 9;
+      bubble.style.width = size + 'px';
+      bubble.style.height = size + 'px';
+      bubble.style.left = (xPercent ?? Math.random() * 92 + 4) + '%';
+      bubble.style.bottom = yBottomPx + 'px';
+      aquarium.appendChild(bubble);
+
+      setTimeout(() => bubble.remove(), 5500);
+    }
+
+    document.getElementById('btnBubble').addEventListener('click', () => {
+      for (let i = 0; i < 10; i++) {
+        setTimeout(() => spawnBubble(), i * 120);
+      }
+    });
+
+    aquarium.addEventListener('click', (e) => {
+      const rect = aquarium.getBoundingClientRect();
+      const xPercent = ((e.clientX - rect.left) / rect.width) * 100;
+      const yBottomPx = rect.bottom - e.clientY;
+      spawnBubble(xPercent, Math.max(30, yBottomPx));
+      setTimeout(() => spawnBubble(xPercent + 1.2, Math.max(35, yBottomPx + 8), 8), 120);
+    });
+
+    setInterval(() => {
+      if (isPaused) return;
+      const divers = document.querySelectorAll('.diver');
+      const randomDiver = divers[Math.floor(Math.random() * divers.length)];
+      const rect = randomDiver.getBoundingClientRect();
+      const tankRect = aquarium.getBoundingClientRect();
+
+      if (rect.left > 0 && rect.right < tankRect.width) {
+        const xPct = ((rect.left + rect.width * 0.65 - tankRect.left) / tankRect.width) * 100;
+        const yBot = tankRect.bottom - (rect.top + rect.height * 0.35);
+        spawnBubble(xPct, yBot, 10);
+        setTimeout(() => spawnBubble(xPct + 0.8, yBot + 10, 7), 180);
+      }
+    }, 2200);
+
+    document.getElementById('btnFeed').addEventListener('click', () => {
+      if (isPaused) return;
+      for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+          const food = document.createElement('span');
+          food.className = 'fish-food';
+          food.style.left = Math.random() * 80 + 10 + '%';
+          aquarium.appendChild(food);
+          setTimeout(() => food.remove(), 6500);
+        }, i * 220);
+      }
+    });
+
+    document.querySelectorAll('.creature').forEach((creature) => {
+      creature.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const img = creature.querySelector('img');
+        img.classList.remove('active-react');
+        void img.offsetWidth;
+        img.classList.add('active-react');
+
+        const rect = creature.getBoundingClientRect();
+        const tankRect = aquarium.getBoundingClientRect();
+        const xPct = ((rect.left + rect.width / 2 - tankRect.left) / tankRect.width) * 100;
+        const yBot = tankRect.bottom - (rect.top + rect.height / 2);
+
+        for (let i = 0; i < 4; i++) {
+          setTimeout(() => {
+            spawnBubble(xPct + (Math.random() * 4 - 2), yBot + i * 8, 11);
+          }, i * 100);
+        }
+      });
+    });
+
+    // 6. Tạm dừng / Tiếp tục chuyển động
+    const btnPause = document.getElementById('btnPause');
+    btnPause.addEventListener('click', () => {
+      isPaused = !isPaused;
+      body.classList.toggle('paused', isPaused);
+      btnPause.textContent = isPaused ? 'Tiếp tục' : 'Tạm dừng';
+    });
+  </script>
+</body>
+</html>
